@@ -1,12 +1,15 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller, Inject } from '@nestjs/common';
+import { ClientProxy, EventPattern, Payload } from '@nestjs/microservices';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    @Inject('TRANSACTION_SERVICE') private readonly client: ClientProxy,
+  ) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @EventPattern('transfer_initiated')
+  handleTransfer(@Payload() data: any) {
+    console.log('Received transfer_initiated event:', data);
+    this.client.emit('transfer_completed', { ...data, status: 'SUCCESS' });
   }
 }
