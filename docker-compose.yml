@@ -1,15 +1,29 @@
 services:
-  postgres:
+  postgres_wallet:
     image: postgres:15-alpine
-    container_name: postgres
+    container_name: postgres_wallet
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
       POSTGRES_DB: wallet_db
     ports:
-      - '5432:5432'
+      - '5434:5432'
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_wallet_data:/var/lib/postgresql/data
+    networks:
+      - microservices_net
+
+  postgres_transaction:
+    image: postgres:15-alpine
+    container_name: postgres_transaction
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: transaction_db
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres_transaction_data:/var/lib/postgresql/data
     networks:
       - microservices_net
 
@@ -59,5 +73,7 @@ networks:
     driver: bridge
 
 volumes:
-  postgres_data:
+  postgres_wallet_data:
+    driver: local
+  postgres_transaction_data:
     driver: local
