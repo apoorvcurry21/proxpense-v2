@@ -7,14 +7,14 @@ export class WalletController {
   constructor(private readonly walletService: WalletService) {}
 
   @Post('wallets')
-  async createWallet(@Body() body: { userId: string; initialBalance: number }) {
+  async createWallet(@Body() body: { userId: string; initialBalance: number }): Promise<any> {
     return this.walletService.createWallet(body.userId, body.initialBalance);
   }
 
   @EventPattern('transfer_initiated')
   async handleTransfer(
     @Payload() data: { senderId: string; receiverId: string; amount: number },
-  ) {
+  ): Promise<void> {
     return this.walletService.handleTransfer(data);
   }
 }
