@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { WalletController } from './wallet.controller';
+import { WalletService } from './wallet.service';
+import { PrismaModule } from './prisma.service';
 
 @Module({
   imports: [
+    PrismaModule,
     ClientsModule.register([
       {
         name: 'TRANSACTION_SERVICE',
@@ -17,7 +19,7 @@ import { AppService } from './app.service';
       },
     ]),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [WalletController],
+  providers: [WalletService],
 })
 export class AppModule {}

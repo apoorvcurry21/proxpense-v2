@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { AppService } from './app.service';
+import { ApiGatewayService } from './api-gateway.service';
 
 class TransferDto {
   senderId: string;
@@ -9,15 +9,15 @@ class TransferDto {
 }
 
 @Controller()
-export class AppController {
+export class ApiGatewayController {
   constructor(
-    private readonly appService: AppService,
+    private readonly apiGatewayService: ApiGatewayService,
     @Inject('KAFKA_SERVICE') private readonly client: ClientProxy,
   ) {}
 
   @Get()
   getHello(): string {
-    return this.appService.getHello();
+    return this.apiGatewayService.getHello();
   }
 
   @Post('transfer')
