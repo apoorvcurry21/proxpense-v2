@@ -22,8 +22,8 @@ export class TransactionController {
       senderId: data.senderId,
       receiverId: data.receiverId,
       amount: data.amount,
-      status: 'completed',
+      status: data.status || 'FAILED',
     });
-    console.log(`Transaction saved: ${transaction.id}`);
+    console.log(`Transaction saved: ${transaction.id} [${data.status}]`);
   }
 }

@@ -1,4 +1,11 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  NotFoundException,
+} from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { WalletService } from './wallet.service';
 
@@ -7,7 +14,9 @@ export class WalletController {
   constructor(private readonly walletService: WalletService) {}
 
   @Post('wallets')
-  async createWallet(@Body() body: { userId: string; initialBalance: number }): Promise<any> {
+  async createWallet(
+    @Body() body: { userId: string; initialBalance: number },
+  ): Promise<any> {
     return this.walletService.createWallet(body.userId, body.initialBalance);
   }
 
@@ -20,6 +29,10 @@ export class WalletController {
 
   @Get('wallets/:userId')
   async getWallet(@Param('userId') userId: string) {
-    return this.walletService.getWallet(userId);
+    const wallet = await this.walletService.getWallet(userId);
+    if (!wallet) {
+      throw new NotFoundException(`Wallet for user ${userId} not found`);
+    }
+    return wallet;
   }
 }

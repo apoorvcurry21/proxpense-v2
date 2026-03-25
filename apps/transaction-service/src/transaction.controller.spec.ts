@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TransactionController } from './transaction.controller';
 import { TransactionService } from './transaction.service';
+import { PrismaService } from './prisma.service';
 
 describe('TransactionController', () => {
   let transactionController: TransactionController;
@@ -8,7 +9,18 @@ describe('TransactionController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [TransactionController],
-      providers: [TransactionService],
+      providers: [
+        TransactionService,
+        {
+          provide: PrismaService,
+          useValue: {
+            transactionRecord: {
+              create: jest.fn(),
+              findMany: jest.fn(),
+            },
+          },
+        },
+      ],
     }).compile();
 
     transactionController = app.get<TransactionController>(TransactionController);

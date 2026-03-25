@@ -80,15 +80,30 @@ export class ApiGatewayController {
     }
     try {
       const response = await fetch(`${serviceUrl}/wallets/${userId}`);
-      if (!response.ok) {
-        if (response.status === 404) return null;
-        const result = (await response.json()) as Record<string, unknown>;
+      if (response.status === 404) return null;
+
+      const text = await response.text();
+      let result: unknown = null;
+      try {
+        result = text ? JSON.parse(text) : null;
+      } catch {
         throw new HttpException(
-          (result.message as string) || 'Failed to fetch wallet',
-          response.status,
+          'Invalid response from Wallet Service',
+          HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
-      return (await response.json()) as unknown;
+
+      if (!response.ok) {
+        let message = 'Failed to fetch wallet';
+        if (result && typeof result === 'object' && 'message' in result) {
+          const resObj = result as Record<string, unknown>;
+          if (typeof resObj.message === 'string') {
+            message = resObj.message;
+          }
+        }
+        throw new HttpException(message, response.status);
+      }
+      return result;
     } catch (error: unknown) {
       if (error instanceof HttpException) throw error;
       throw new HttpException(
@@ -109,14 +124,30 @@ export class ApiGatewayController {
     }
     try {
       const response = await fetch(`${serviceUrl}/transactions/${userId}`);
-      if (!response.ok) {
-        const result = (await response.json()) as Record<string, unknown>;
+      if (response.status === 404) return [];
+
+      const text = await response.text();
+      let result: unknown = null;
+      try {
+        result = text ? JSON.parse(text) : null;
+      } catch {
         throw new HttpException(
-          (result.message as string) || 'Failed to fetch transactions',
-          response.status,
+          'Invalid response from Transaction Service',
+          HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
-      return (await response.json()) as unknown;
+
+      if (!response.ok) {
+        let message = 'Failed to fetch transactions';
+        if (result && typeof result === 'object' && 'message' in result) {
+          const resObj = result as Record<string, unknown>;
+          if (typeof resObj.message === 'string') {
+            message = resObj.message;
+          }
+        }
+        throw new HttpException(message, response.status);
+      }
+      return result;
     } catch (error: unknown) {
       if (error instanceof HttpException) throw error;
       throw new HttpException(

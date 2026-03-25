@@ -167,8 +167,19 @@ function App() {
                     <p style={{ fontWeight: 600 }}>{t.senderId === userId ? `To: ${t.receiverId}` : `From: ${t.senderId}`}</p>
                     <p className="dim">{new Date(t.createdAt).toLocaleString()}</p>
                   </div>
-                  <div className={t.senderId === userId ? 'amount-minus' : 'amount-plus'} style={{ fontWeight: 'bold' }}>
-                    {t.senderId === userId ? '-' : '+'}${t.amount}
+                  <div style={{ textAlign: 'right' }}>
+                    <div className={t.senderId === userId ? 'amount-minus' : 'amount-plus'} style={{ fontWeight: 'bold' }}>
+                      {t.senderId === userId ? '-' : '+'}${t.amount.toLocaleString()}
+                    </div>
+                    <div style={{ 
+                      fontSize: '0.7rem', 
+                      marginTop: '0.2rem',
+                      color: t.status === 'SUCCESS' ? '#10b981' : '#ef4444',
+                      textTransform: 'uppercase',
+                      fontWeight: 'bold'
+                    }}>
+                      {t.status}
+                    </div>
                   </div>
                 </div>
               ))
