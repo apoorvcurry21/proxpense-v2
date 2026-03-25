@@ -11,7 +11,7 @@ import { ApiGatewayService } from './api-gateway.service';
         transport: Transport.KAFKA,
         options: {
           client: {
-            brokers: ['localhost:9094'],
+            brokers: [process.env.KAFKA_BROKERS || 'localhost:9094'],
           },
         },
       },

@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { WalletController } from './wallet.controller';
 import { WalletService } from './wallet.service';
@@ -6,6 +7,7 @@ import { PrismaModule } from './prisma.service';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
     ClientsModule.register([
       {
@@ -13,7 +15,7 @@ import { PrismaModule } from './prisma.service';
         transport: Transport.KAFKA,
         options: {
           client: {
-            brokers: ['localhost:9094'],
+            brokers: [process.env.KAFKA_BROKERS || 'localhost:9094'],
           },
         },
       },

@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { EventPattern, Payload } from '@nestjs/microservices';
 
@@ -9,6 +9,11 @@ export class TransactionController {
   @Get()
   getHello(): string {
     return this.transactionService.getHello();
+  }
+
+  @Get('transactions/:userId')
+  async getTransactions(@Param('userId') userId: string) {
+    return this.transactionService.getTransactions(userId);
   }
 
   @EventPattern('transfer_completed')

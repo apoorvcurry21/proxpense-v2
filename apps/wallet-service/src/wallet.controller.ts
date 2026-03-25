@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { WalletService } from './wallet.service';
 
@@ -16,5 +16,10 @@ export class WalletController {
     @Payload() data: { senderId: string; receiverId: string; amount: number },
   ): Promise<void> {
     return this.walletService.handleTransfer(data);
+  }
+
+  @Get('wallets/:userId')
+  async getWallet(@Param('userId') userId: string) {
+    return this.walletService.getWallet(userId);
   }
 }

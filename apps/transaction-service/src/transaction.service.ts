@@ -19,4 +19,13 @@ export class TransactionService {
       data,
     });
   }
+
+  async getTransactions(userId: string) {
+    return this.prisma.transactionRecord.findMany({
+      where: {
+        OR: [{ senderId: userId }, { receiverId: userId }],
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
 }
